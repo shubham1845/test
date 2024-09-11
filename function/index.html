@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        function longestConsecutiveSequence(arr) {
+          if (arr.length === 0) return 0;
+
+          // Create a set for O(1) lookup
+          const numSet = new Set(arr);
+          let longestChain = 0;
+
+          for (let num of arr) {
+            // Check if the current number is the start of a sequence
+            if (!numSet.has(num - 1)) {
+              let currentNum = num;
+              let currentChain = 1;
+
+              // Check how long the sequence is
+              while (numSet.has(currentNum + 1)) {
+                currentNum += 1;
+                currentChain += 1;
+              }
+
+              // Update the longest chain found
+              longestChain = Math.max(longestChain, currentChain);
+            }
+          }
+
+          return longestChain;
+        }
+
+        const arr = [100, 4, 200, 1, 3, 2];
+        console.log(
+          "The length of longest chain that can be formed is:",
+          longestConsecutiveSequence(arr)
+        ); // Output: 4 (The sequence is [1, 2, 3, 4])
+      });
+    </script>
+    <script>
+      console.log("5Th tasks start");
+
+      function countSmaller(nums) {
+        let result = new Array(nums.length).fill(0); // To store counts of smaller elements
+        let indices = [...nums.keys()]; // Store original indices
+
+        function mergeSort(start, end) {
+          if (end - start <= 1) return;
+
+          let mid = Math.floor((start + end) / 2);
+          mergeSort(start, mid);
+          mergeSort(mid, end);
+
+          let temp = [];
+          let i = start,
+            j = mid;
+
+          while (i < mid || j < end) {
+            if (
+              j === end ||
+              (i < mid && nums[indices[i]] <= nums[indices[j]])
+            ) {
+              temp.push(indices[i]);
+              result[indices[i]] += j - mid; // Count how many elements on the right are smaller
+              i++;
+            } else {
+              temp.push(indices[j]);
+              j++;
+            }
+          }
+
+          for (let k = start; k < end; k++) {
+            indices[k] = temp[k - start];
+          }
+        }
+
+        mergeSort(0, nums.length);
+        return result;
+      }
+      let nums = [5, 2, 6, 1];
+      console.log(countSmaller(nums)); // Output: [2, 1, 1, 0]
+    </script>
+  </body>
+</html>
